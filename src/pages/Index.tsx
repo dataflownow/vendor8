@@ -1,8 +1,9 @@
 
-import { Button } from "@/components/ui/button";
-import Layout from "@/components/layout/Layout";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Play } from "lucide-react";
+import Layout from "@/components/layout/Layout";
+import LoginForm from "@/components/auth/LoginForm";
+import { Button } from "@/components/ui/button";
 
 const Index = () => {
   return (
@@ -22,12 +23,22 @@ const Index = () => {
           </p>
 
           <div className="flex flex-col space-y-4">
-            <Button 
-              size="lg"
-              className="w-full bg-vendor8-500 hover:bg-vendor8-600 text-white"
-            >
-              Log in to my store
-            </Button>
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button 
+                  size="lg"
+                  className="w-full bg-vendor8-500 hover:bg-vendor8-600 text-white"
+                >
+                  Log in to my store
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <DialogHeader>
+                  <DialogTitle>Log in to your store</DialogTitle>
+                </DialogHeader>
+                <LoginForm />
+              </DialogContent>
+            </Dialog>
 
             <Dialog>
               <DialogTrigger asChild>
