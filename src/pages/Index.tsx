@@ -12,12 +12,16 @@ const Index = () => {
         <div className="text-center max-w-md px-4">
 <div className="relative h-16 w-16 bg-vendor8-500 rounded-md flex items-center justify-center text-white font-bold text-4xl mx-auto mb-6">
   8
-  {/* Bite */}
-  <div className="absolute -top-1 -right-1 w-6 h-6 bg-white rounded-full shadow-inner"></div>
 
-  {/* Crumb */}
-  <div className="absolute top-0 right-0 w-1.5 h-1.5 bg-vendor8-500 rounded-full translate-x-3 -translate-y-1 rotate-12"></div>
+  {/* three circular “teeth” */}
+  <div className="absolute -bottom-1 -left-1 w-7 h-7 bg-white rounded-full shadow-inner"></div>
+  <div className="absolute bottom-4 -left-2 w-5 h-5 bg-white rounded-full shadow-inner"></div>
+  <div className="absolute -bottom-2 left-4 w-4 h-4 bg-white rounded-full shadow-inner"></div>
+
+  {/* tiny crumb, nestled above the bite */}
+  <div className="absolute bottom-1 left-5 w-2 h-2 bg-vendor8-500 rounded-full"></div>
 </div>
+
 
           
           <h1 className="text-4xl font-extrabold text-gray-900 mb-4">
