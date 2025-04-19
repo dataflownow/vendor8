@@ -19,7 +19,7 @@ const Index = () => {
           </h1>
           
           <p className="text-xl text-gray-500 mb-8">
-            Start selling. Mobile ordering for food vendors.
+            Mobile ordering for food vendors.
           </p>
 
           <div className="flex flex-col space-y-4">
@@ -29,12 +29,12 @@ const Index = () => {
                   size="lg"
                   className="w-full bg-vendor8-500 hover:bg-vendor8-600 text-white"
                 >
-                  Log in to my store
+                  Start selling
                 </Button>
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
-                  <DialogTitle>Log in to your store</DialogTitle>
+                  <DialogTitle>Start selling</DialogTitle>
                 </DialogHeader>
                 <LoginForm />
               </DialogContent>
