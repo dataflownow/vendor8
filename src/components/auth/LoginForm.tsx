@@ -24,6 +24,9 @@ export default function LoginForm() {
   const emailForm = useForm<EmailFormData>();
   const signupForm = useForm<SignupFormData>();
 
+  // Get the current site URL
+  const siteUrl = window.location.origin;
+
   const checkEmailExists = async ({ email }: EmailFormData) => {
     setIsLoading(true);
     try {
@@ -31,7 +34,7 @@ export default function LoginForm() {
       const { error } = await supabase.auth.signInWithOtp({ 
         email,
         options: {
-          emailRedirectTo: `${window.location.origin}/dashboard`
+          emailRedirectTo: `${siteUrl}/dashboard`
         }
       });
 
@@ -65,7 +68,7 @@ export default function LoginForm() {
           data: {
             business_name: data.businessName
           },
-          emailRedirectTo: `${window.location.origin}/dashboard`
+          emailRedirectTo: `${siteUrl}/dashboard`
         }
       });
 
