@@ -40,6 +40,7 @@ const Index = () => {
                 <Button 
                   size="lg"
                   className="w-full bg-vendor8-500 hover:bg-vendor8-600 text-white"
+                  onClick={() => window.location.href = '/auth'}
                 >
                   Start selling
                 </Button>
