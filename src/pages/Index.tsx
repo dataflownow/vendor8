@@ -13,14 +13,15 @@ const Index = () => {
 <div className="relative h-16 w-16 bg-vendor8-500 rounded-md flex items-center justify-center text-white font-bold text-4xl mx-auto mb-6">
   8
 
-  {/* three circular “teeth” */}
-  <div className="absolute -bottom-1 -left-1 w-7 h-7 bg-white rounded-full shadow-inner"></div>
+  {/* three “teeth” more snug to the corner */}
+  <div className="absolute -bottom-2 -left-2 w-6 h-6 bg-white rounded-full shadow-inner"></div>
   <div className="absolute bottom-4 -left-2 w-5 h-5 bg-white rounded-full shadow-inner"></div>
-  <div className="absolute -bottom-2 left-4 w-4 h-4 bg-white rounded-full shadow-inner"></div>
+  <div className="absolute -bottom-3 left-3 w-4 h-4 bg-white rounded-full shadow-inner"></div>
 
-  {/* tiny crumb, nestled above the bite */}
-  <div className="absolute bottom-1 left-5 w-2 h-2 bg-vendor8-500 rounded-full"></div>
+  {/* crumb moved down & left */}
+  <div className="absolute bottom-0 left-3 w-2 h-2 bg-vendor8-500 rounded-full"></div>
 </div>
+
 
 
           
