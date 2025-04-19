@@ -1,47 +1,53 @@
-// src/components/auth/LoginForm.tsx
+
 import { useForm } from "react-hook-form";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+
+interface EmailFormData {
+  email: string;
+}
+
+interface SignupFormData extends EmailFormData {
+  password: string;
+  businessName: string;
+}
 
 export default function LoginForm() {
   const [isLoading, setIsLoading] = useState(false);
-  const { register, handleSubmit } = useForm<{ email: string }>();
+  const [showSignupForm, setShowSignupForm] = useState(false);
+  const [emailValue, setEmailValue] = useState("");
+  
+  const emailForm = useForm<EmailFormData>();
+  const signupForm = useForm<SignupFormData>();
 
-  const onSubmit = async ({ email }: { email: string }) => {
+  const checkEmailExists = async ({ email }: EmailFormData) => {
     setIsLoading(true);
     try {
-      // 1️⃣ Try to sign them up
-      const { error: signUpError } = await supabase.auth.signUp(
-        { email },
-        {
-          // Where should the user land after they click the "confirm account" link?
-          emailRedirectTo: `${window.location.origin}/complete-signup`,
+      // Try to sign in - this is the most reliable way to check if an email exists
+      const { error } = await supabase.auth.signInWithOtp({ 
+        email,
+        options: {
+          emailRedirectTo: `${window.location.origin}/dashboard`
         }
-      );
+      });
 
-      if (signUpError) {
-        // If it's “user already registered”, send a login link instead
-        if (
-          signUpError.status === 400 &&
-          signUpError.message.includes("User already registered")
-        ) {
-          const { error: loginError } = await supabase.auth.signInWithOtp({
-            email,
-            options: {
-              emailRedirectTo: `${window.location.origin}/dashboard`,
-            },
-          });
-          if (loginError) throw loginError;
-          toast.success("Check your inbox for a login link.");
-        } else {
-          throw signUpError;
-        }
-      } else {
-        toast.success("Check your inbox for a signup confirmation link.");
+      if (error?.message.includes("Email not confirmed")) {
+        toast.error("Please confirm your email first");
+        return;
       }
+
+      if (!error) {
+        toast.success("Check your email for a login link");
+        return;
+      }
+
+      // If we get here, the email doesn't exist
+      setEmailValue(email);
+      setShowSignupForm(true);
     } catch (err: any) {
       toast.error(err.message);
     } finally {
@@ -49,16 +55,78 @@ export default function LoginForm() {
     }
   };
 
+  const handleSignup = async (data: SignupFormData) => {
+    setIsLoading(true);
+    try {
+      const { error } = await supabase.auth.signUp({
+        email: data.email,
+        password: data.password,
+        options: {
+          data: {
+            business_name: data.businessName
+          },
+          emailRedirectTo: `${window.location.origin}/dashboard`
+        }
+      });
+
+      if (error) throw error;
+      toast.success("Check your email to confirm your account");
+      setShowSignupForm(false);
+    } catch (err: any) {
+      toast.error(err.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  if (showSignupForm) {
+    return (
+      <form onSubmit={signupForm.handleSubmit(handleSignup)} className="space-y-4">
+        <div className="space-y-2">
+          <Label htmlFor="email">Email</Label>
+          <Input
+            id="email"
+            value={emailValue}
+            disabled
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="password">Password</Label>
+          <Input
+            id="password"
+            type="password"
+            {...signupForm.register("password", { required: true })}
+            disabled={isLoading}
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="businessName">Business Name</Label>
+          <Input
+            id="businessName"
+            {...signupForm.register("businessName", { required: true })}
+            disabled={isLoading}
+          />
+        </div>
+        <Button type="submit" disabled={isLoading} className="w-full">
+          Create Account
+        </Button>
+      </form>
+    );
+  }
+
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-      <Input
-        {...register("email", { required: true })}
-        type="email"
-        placeholder="you@example.com"
-        disabled={isLoading}
-      />
+    <form onSubmit={emailForm.handleSubmit(checkEmailExists)} className="space-y-4">
+      <div className="space-y-2">
+        <Label htmlFor="email">Email</Label>
+        <Input
+          id="email"
+          type="email"
+          {...emailForm.register("email", { required: true })}
+          disabled={isLoading}
+        />
+      </div>
       <Button type="submit" disabled={isLoading} className="w-full">
-        Continue with Email
+        Continue
       </Button>
     </form>
   );
