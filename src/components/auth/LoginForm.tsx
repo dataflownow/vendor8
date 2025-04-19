@@ -33,7 +33,17 @@ const LoginForm = () => {
         },
       });
 
-      if (error) throw error;
+      if (error) {
+        // Check if this is our custom error message
+        if (error.message?.includes('Supabase not configured')) {
+          toast.error("Supabase not configured", {
+            description: "Please connect your project to Supabase to enable authentication."
+          });
+        } else {
+          throw error;
+        }
+        return;
+      }
 
       toast.success(
         "Check your email for a login link",
