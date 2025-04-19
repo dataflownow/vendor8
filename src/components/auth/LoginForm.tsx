@@ -24,6 +24,8 @@ const LoginForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [showSignupForm, setShowSignupForm] = useState(false);
   const [emailToSignup, setEmailToSignup] = useState("");
+  const [showPasswordForm, setShowPasswordForm] = useState(false);
+  const [emailToLogin, setEmailToLogin] = useState("");
   
   const emailForm = useForm<z.infer<typeof emailFormSchema>>({
     resolver: zodResolver(emailFormSchema),
@@ -41,38 +43,68 @@ const LoginForm = () => {
     },
   });
 
+  const passwordForm = useForm({
+    resolver: zodResolver(z.object({
+      password: z.string().min(6, "Password must be at least 6 characters")
+    })),
+    defaultValues: {
+      password: "",
+    }
+  });
+
   const checkEmail = async (values: z.infer<typeof emailFormSchema>) => {
     try {
       setIsLoading(true);
       
-      // First check if the user exists
-      const { data, error: userError } = await supabase.auth.signInWithOtp({
-        email: values.email,
-        options: {
-          shouldCreateUser: false, // Don't create a new user yet
-        },
-      });
-
-      if (userError) {
-        if (userError.message === "User not found") {
-          // Show signup form if user doesn't exist
+      // First check if the user exists by trying to get user by email
+      const { data, error } = await supabase.auth.admin.getUserByEmail(values.email);
+      
+      if (error) {
+        if (error.message.includes("Not found") || error.status === 404) {
+          // User doesn't exist, show signup form
           setEmailToSignup(values.email);
           setShowSignupForm(true);
           return;
         }
-        throw userError;
+        
+        // For other errors, we'll show login with password form since user likely exists
+        setEmailToLogin(values.email);
+        setShowPasswordForm(true);
+        return;
       }
-
-      // If we get here, user exists and magic link was sent
-      toast.success(
-        "Check your email for a login link",
-        {
-          description: "We sent you a magic link to log in to your store."
-        }
-      );
+      
+      // User exists, show login with password form
+      setEmailToLogin(values.email);
+      setShowPasswordForm(true);
       
     } catch (error: any) {
-      toast.error("Failed to process request", {
+      console.error("Error checking email:", error);
+      
+      // If we can't check the user, assume they need to enter password
+      setEmailToLogin(values.email);
+      setShowPasswordForm(true);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleLogin = async (values: { password: string }) => {
+    try {
+      setIsLoading(true);
+      
+      const { error } = await supabase.auth.signInWithPassword({
+        email: emailToLogin,
+        password: values.password,
+      });
+
+      if (error) throw error;
+
+      toast.success("Logged in successfully");
+      // Close the dialog after successful login
+      setShowPasswordForm(false);
+      
+    } catch (error: any) {
+      toast.error("Failed to sign in", {
         description: error.message
       });
     } finally {
@@ -142,6 +174,52 @@ const LoginForm = () => {
         </form>
       </Form>
 
+      {/* Password Login Dialog */}
+      <AlertDialog open={showPasswordForm} onOpenChange={setShowPasswordForm}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Enter your password</AlertDialogTitle>
+            <AlertDialogDescription>
+              Please enter the password for {emailToLogin}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          
+          <Form {...passwordForm}>
+            <form onSubmit={passwordForm.handleSubmit(handleLogin)} className="space-y-4 py-4">
+              <FormField
+                control={passwordForm.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input
+                        placeholder="Password"
+                        type="password"
+                        autoComplete="current-password"
+                        disabled={isLoading}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <Button 
+                  type="submit"
+                  className="bg-vendor8-500 hover:bg-vendor8-600"
+                  disabled={isLoading}
+                >
+                  Log In
+                </Button>
+              </AlertDialogFooter>
+            </form>
+          </Form>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Signup Dialog */}
       <AlertDialog open={showSignupForm} onOpenChange={setShowSignupForm}>
         <AlertDialogContent>
           <AlertDialogHeader>
