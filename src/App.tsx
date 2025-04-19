@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -11,6 +10,7 @@ import NotFound from "./pages/NotFound";
 import MenuPage from "./pages/MenuPage";
 import VendorPage from "./pages/VendorPage";
 import AuthPage from "./pages/AuthPage";
+import VendorSetup from "./pages/VendorSetup";
 
 const queryClient = new QueryClient();
 
@@ -97,13 +97,11 @@ const App = () => {
               } 
             />
             
-            {/* Add a vendor setup page */}
             <Route 
               path="/vendor/setup" 
               element={
                 <ProtectedRoute>
-                  {/* You'll create this component later */}
-                  <div>Complete Your Vendor Profile</div>
+                  <VendorSetup />
                 </ProtectedRoute>
               } 
             />
