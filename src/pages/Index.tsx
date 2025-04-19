@@ -10,9 +10,15 @@ const Index = () => {
     <Layout hideFooter>
       <div className="min-h-screen bg-gradient-to-b from-vendor8-50 to-white flex items-center justify-center">
         <div className="text-center max-w-md px-4">
-<div className="h-16 w-16 bg-vendor8-500 rounded-md flex items-center justify-center text-white font-bold text-4xl mx-auto mb-6">
+<div className="relative h-16 w-16 bg-vendor8-500 rounded-md flex items-center justify-center text-white font-bold text-4xl mx-auto mb-6">
   8
+  {/* Bite */}
+  <div className="absolute -top-1 -right-1 w-6 h-6 bg-white rounded-full shadow-inner"></div>
+
+  {/* Crumb */}
+  <div className="absolute top-0 right-0 w-1.5 h-1.5 bg-vendor8-500 rounded-full translate-x-3 -translate-y-1 rotate-12"></div>
 </div>
+
           
           <h1 className="text-4xl font-extrabold text-gray-900 mb-4">
             vendor8
