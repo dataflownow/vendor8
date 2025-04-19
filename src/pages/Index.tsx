@@ -10,9 +10,9 @@ const Index = () => {
     <Layout hideFooter>
       <div className="min-h-screen bg-gradient-to-b from-vendor8-50 to-white flex items-center justify-center">
         <div className="text-center max-w-md px-4">
-          <div className="h-16 w-16 bg-vendor8-500 rounded-md flex items-center justify-center text-white font-bold mx-auto mb-6">
-            8
-          </div>
+<div className="h-16 w-16 bg-vendor8-500 rounded-md flex items-center justify-center text-white font-bold text-4xl mx-auto mb-6">
+  8
+</div>
           
           <h1 className="text-4xl font-extrabold text-gray-900 mb-4">
             vendor8
