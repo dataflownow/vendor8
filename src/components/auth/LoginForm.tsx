@@ -34,7 +34,7 @@ export default function LoginForm() {
       const { error } = await supabase.auth.signInWithOtp({ 
         email,
         options: {
-          emailRedirectTo: `${siteUrl}/dashboard`
+          emailRedirectTo: `${siteUrl}/vendor`
         }
       });
 
@@ -68,7 +68,7 @@ export default function LoginForm() {
           data: {
             business_name: data.businessName
           },
-          emailRedirectTo: `${siteUrl}/dashboard`
+          emailRedirectTo: `${siteUrl}/vendor`
         }
       });
 
