@@ -21,11 +21,6 @@ const Index = () => {
   {/* crumb moved down & left */}
   <div className="absolute bottom-0 left-3 w-2 h-2 bg-vendor8-500 rounded-full"></div>
 </div>
-
-
-
-
-          
           <h1 className="text-4xl font-extrabold text-gray-900 mb-4">
             vendor8
           </h1>
